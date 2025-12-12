@@ -41,17 +41,18 @@ def get_coordinates(address, client):
         return None, str(e)
 
 def get_route_ors(start_addr, end_addr, client):
-    """Tìm đường đi bộ/xe (Vì ORS Free hạn chế dữ liệu Bus realtime)"""
+    """Tìm đường đi bộ/xe (Sửa lỗi return type)"""
     # 1. Tìm tọa độ điểm đi/đến
     start_coords, start_label = get_coordinates(start_addr, client)
     end_coords, end_label = get_coordinates(end_addr, client)
     
+    # [FIX LỖI TẠI ĐÂY]: Trả về None trước, Error sau
     if not start_coords or not end_coords:
-        return f"Không tìm thấy địa điểm: {start_addr if not start_coords else end_addr}", None
+        missing = start_addr if not start_coords else end_addr
+        return None, f"Không tìm thấy địa điểm: {missing}. Vui lòng nhập cụ thể hơn (Ví dụ: thêm 'TPHCM')."
 
     try:
         # 2. Tìm đường
-        # profile='foot-walking' (đi bộ) hoặc 'driving-car' (xe)
         route = client.directions(
             coordinates=[start_coords, end_coords],
             profile='foot-walking', 
@@ -80,7 +81,7 @@ def get_route_ors(start_addr, end_addr, client):
 
     except Exception as e:
         return None, f"Lỗi tìm đường: {str(e)}"
-
+        
 # --- CÁC HÀM ÂM THANH (GIỮ NGUYÊN) ---
 def text_to_speech(text):
     try:
@@ -198,3 +199,4 @@ with col2:
         except Exception as e:
 
             st.error(f"Lỗi AI: {e}")
+
