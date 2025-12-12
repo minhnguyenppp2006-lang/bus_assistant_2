@@ -112,7 +112,7 @@ if ORS_API_KEY:
     ors_client = openrouteservice.Client(key=ORS_API_KEY)
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-flash-latest')
 
 col1, col2 = st.columns([1, 1])
 
@@ -196,4 +196,5 @@ with col2:
             if aud: st.audio(aud, format='audio/mp3', start_time=0)
             
         except Exception as e:
+
             st.error(f"Lỗi AI: {e}")
